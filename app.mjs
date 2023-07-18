@@ -1,5 +1,6 @@
 import express from 'express';
 import log from '@ajar/marker';
+import morgan from 'morgan';
 
 const { PORT, HOST } = process.env;
 
@@ -7,6 +8,7 @@ const { PORT, HOST } = process.env;
 
 const app = express()
 
+app.use( morgan('dev') );
 
 app.get('/',  (req, res) => {
     res.status(200).send('Hello Express!')
@@ -16,13 +18,28 @@ app.get('/users', (req, res,next) => {
     res.status(200).send('Get all Users')
 })
 
-
+//req.query
 // '/search?food=burger&town=ashdod'
+app.get('/search', (req, res) => {
+    log.magenta(req.query.food);
+    res.status(200).send(req.query);
+})
 
+//req.params
+app.get('/users/:user_id', (req, res) => {
+    res.status(200).send(`<h1>User ID: ${req.params.user_id}</h1>`);
+})
+
+//req.body
+app.post('/shows', (req, res) => {
+    res.status(200).send(`Creating new show: ${req.body.showName}`);
+})
 
 app.listen(PORT, HOST,  ()=> {
     log.magenta(`🌎  listening on`,`http://${HOST}:${PORT}`);
 });
+
+
 
 
 //------------------------------------------
